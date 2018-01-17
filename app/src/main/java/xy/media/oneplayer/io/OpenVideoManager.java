@@ -56,7 +56,7 @@ public class OpenVideoManager {
         int index = 0;
         int pos = -1;
         for (BaseFile baseFile : tmp) {
-            VideoPlayedModel model = new VideoPlayedModel(baseFile.getId(), baseFile.getPath());
+            VideoPlayedModel model = new VideoPlayedModel(0, baseFile.getPath());
             model.setType(TYPE_OF_PLAYED_VIDEO_LOCAL);
             playlist.add(model);
 
@@ -66,7 +66,7 @@ public class OpenVideoManager {
             index ++;
         }
 
-        openVideo(activity, pos,null, OPEN_TYPE_LIBRARY_MODE, false);
+        openVideo(activity, pos,playlist, OPEN_TYPE_LIBRARY_MODE, false);
     }
 
     private static boolean isContain(BaseFile file, ArrayList<BaseFile> list){

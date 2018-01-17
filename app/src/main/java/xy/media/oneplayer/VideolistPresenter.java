@@ -1,5 +1,7 @@
 package xy.media.oneplayer;
 
+import android.app.Activity;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,6 +18,7 @@ import xy.media.oneplayer.data.greendao.CenterFile;
 import xy.media.oneplayer.data.helper.DataCompareHelper;
 import xy.media.oneplayer.data.helper.VideoDataHelper;
 import xy.media.oneplayer.data.model.VideoInfo;
+import xy.media.oneplayer.io.OpenVideoManager;
 import xy.media.oneplayer.log.log.GLog;
 import xy.media.oneplayer.util.CommonUtil;
 
@@ -202,5 +205,10 @@ public class VideolistPresenter implements VideoListContract.Presenter {
                 }
             }
         }
+    }
+
+    @Override
+    public void openVideo(Activity activity, VideoInfo model) {
+        OpenVideoManager.open(activity , model, false, null);
     }
 }

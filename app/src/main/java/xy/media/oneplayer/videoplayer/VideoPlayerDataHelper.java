@@ -11,24 +11,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import me.godap.application.GDApplication;
-import me.godap.channel.model.FileModel;
-import me.godap.channel.model.ShareModel;
-import me.godap.discover.business.account.UserProxy;
-import me.godap.filecenter.io.OpenVideoManager;
-import me.godap.filecenter.io.VideoPlayedModel;
-import me.godap.greendao.Feed;
-import me.godap.lib.mod.file.db.VideoPlayRecordDBManager;
-import me.godap.lib.mod.file.greendao.VideoPlayRecord;
-import me.godap.lib.mod.file.selectmode.CurrentSelectHelper;
-import me.godap.lib.mod.file.selectmode.SelectFileHelper;
-import me.godap.lib.mod.file.utils.FileModuleSharePreferenceUtil;
-import me.godap.lib.mod.file.utils.FileUtil;
-import me.godap.lib.pub.log.GLog;
-import me.godap.lib.utils.TextUtil;
-import me.godap.network.utils.BaseWebParams;
-
-import static me.godap.channel.model.FeedModel.FEED_TYPE_LIKE;
+import xy.media.oneplayer.data.dbhelper.VideoPlayRecordDBManager;
+import xy.media.oneplayer.data.greendao.VideoPlayRecord;
+import xy.media.oneplayer.io.OpenVideoManager;
+import xy.media.oneplayer.io.VideoPlayedModel;
+import xy.media.oneplayer.log.log.GLog;
+import xy.media.oneplayer.util.FileUtil;
+import xy.media.oneplayer.util.SharePreferenceUtil;
+import xy.media.oneplayer.util.TextUtil;
 
 /**
  * Created by tony on 2017/12/18.
@@ -39,7 +29,6 @@ public class VideoPlayerDataHelper {
 
     public static final int PLAY_NEXT_VIDEO_DELAY = 5 * 1000;
 
-    private SelectFileHelper mSelectFileHelper;
 
     private boolean mIsMute = false;
 
@@ -50,9 +39,7 @@ public class VideoPlayerDataHelper {
     private int mOpenType = OpenVideoManager.OPEN_TYPE_DEFAULT_MODE;
     private VideoPlayedModel mVideo = null;
     private ArrayList<VideoPlayedModel> mVideoList = null;
-    private ArrayList<FileModel> mFileModelList = null;
     private boolean mIsMineShare;
-    private ShareModel mShareModel = null;
 
 
 
@@ -72,11 +59,6 @@ public class VideoPlayerDataHelper {
     }
 
     public void initData(Intent intent, Context context){
-        mSelectFileHelper = CurrentSelectHelper.getCurrent();
-        if (mSelectFileHelper == null) {
-            mSelectFileHelper = SelectFileHelper.getInstance();
-        }
-
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             mVideoList = (ArrayList<VideoPlayedModel>) bundle.getSerializable("video_list");
@@ -144,41 +126,6 @@ public class VideoPlayerDataHelper {
         return index;
     }
 
-    public FileModel findFileModelByFileId(VideoPlayedModel video, List<FileModel> list){
-        if (video != null && list != null) {
-            for (FileModel model : list) {
-                if (video.getFileId() != 0){
-                    if (video.getFileId() == model.getFileId()){
-                        return model;
-                    }
-                } else {
-                    if (! TextUtil.isNull(video.getFilePath()) &&
-                            ! TextUtil.isNull(model.getFilePath())
-                            && video.getFilePath().equals(model.getFilePath())) {
-                        return model;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-
-    public boolean containMineLike(FileModel fileModel){
-        if (fileModel != null) {
-            List<Feed> feeds = fileModel.getFeed();
-            if (feeds != null) {
-                long mineUserId = UserProxy.getInstance().getUserId();
-                for (Feed feed : feeds) {
-                    if (feed.getFeedType() == FEED_TYPE_LIKE
-                        && mineUserId == feed.getSenderUserId()) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 
     public VideoPlayedModel nextVideo(){
         if (mVideo != null && mVideoList != null) {
@@ -198,10 +145,6 @@ public class VideoPlayerDataHelper {
                 String name = file.getName();
                 return FileUtil.getSimpleName(name);
             } else {
-                FileModel fileModel = findFileModelByFileId(mVideo, mFileModelList);
-                if (fileModel != null){
-                    return fileModel.getFileName();
-                }
             }
         }
         return "";
@@ -219,14 +162,6 @@ public class VideoPlayerDataHelper {
             return mVideo.isOnline();
         }
         return false;
-    }
-
-    public SelectFileHelper getSelectFileHelper() {
-        return mSelectFileHelper;
-    }
-
-    public boolean isInSelectMode(){
-        return mSelectFileHelper != null && mSelectFileHelper.isInSelectMode();
     }
 
     public boolean isMute() {
@@ -274,7 +209,7 @@ public class VideoPlayerDataHelper {
     public void saveRecentPlayingVideo(Context context){
         String currentPath = getCurrentPath();
         if (!TextUtil.isNull(currentPath)) {
-            FileModuleSharePreferenceUtil.setRecentPlayingVideo(context, currentPath);
+            SharePreferenceUtil.setRecentPlayingVideo(context, currentPath);
         }
     }
 
@@ -356,53 +291,12 @@ public class VideoPlayerDataHelper {
         return mVideo.getDownloadPercent();
     }
 
-    public long getShareId() {
-        if (mShareModel != null) {
-            return mShareModel.getShareId();
-        }
-        return 0;
-    }
 
-    public boolean isShareFile(){
-        return mShareModel != null;
-    }
-
-    public void setFileModelList(ArrayList<FileModel> list) {
-        this.mFileModelList = new ArrayList<>();
-        if (list != null && ! list.isEmpty()) {
-            mFileModelList.addAll(list);
-        }
-    }
-
-    public ArrayList<FileModel> getFileModelList() {
-        return mFileModelList;
-    }
 
     public int getOpenType() {
         return mOpenType;
     }
 
-    public int getLikeCount() {
-        FileModel fileModel = getCurrentFileModel();
-        if (fileModel != null && fileModel.getFeed() != null) {
-            HashSet<Long> senderIds = new HashSet<>();
-            for (Feed feed : fileModel.getFeed()) {
-                senderIds.add(feed.getSenderUserId());
-            }
-            return senderIds.size();
-        }
-        return 0;
-    }
-
-    public FileModel getCurrentFileModel(){
-        if (mFileModelList != null) {
-            int pos = getCurrentVideoPosition();
-            if (pos >= 0 && pos < mFileModelList.size()) {
-                return mFileModelList.get(pos);
-            }
-        }
-        return null;
-    }
 
     public int getCurrentVideoPosition() {
         if (mVideo != null && mVideoList != null) {
@@ -414,66 +308,5 @@ public class VideoPlayerDataHelper {
             }
         }
         return -1;
-    }
-
-
-    public boolean isMineShare() {
-        FileModel fileModel = getCurrentFileModel();
-        boolean isSameDeviceId = true;
-        if (fileModel != null) {
-            String localDeviceId = BaseWebParams.getDeviceId(GDApplication.getContext());
-            isSameDeviceId =  fileModel.getDeviceId().equals(localDeviceId);
-        }
-        return mIsMineShare && isSameDeviceId;
-    }
-
-    public int getShareCommentCount() {
-        if(mShareModel != null && mShareModel.getFeeds() != null) {
-            return mShareModel.getFeeds().size();
-        }
-        return 0;
-    }
-
-    public void setShareModel(ShareModel shareModel) {
-        this.mShareModel = shareModel;
-
-        //更新shareModel时，要同时更新FileModelList
-        if (shareModel != null && shareModel.getFileList() != null) {
-            refreshFileModelList(shareModel, mFileModelList);
-        }
-    }
-
-    public void refreshShareModel(ShareModel shareModel) {
-        if(mShareModel != null){
-            mShareModel.setFeeds(shareModel.getFeeds());
-            mShareModel.setFileList(shareModel.getFileList());
-        }
-        mShareModel = shareModel;
-
-        //更新shareModel时，要同时更新FileModelList
-        if (shareModel != null && shareModel.getFileList() != null) {
-            refreshFileModelList(shareModel, mFileModelList);
-        }
-    }
-
-
-    private void refreshFileModelList(ShareModel shareModel, ArrayList<FileModel> fileModels) {
-        if (shareModel != null && fileModels != null) {
-            List<FileModel> newList = shareModel.getFileList();
-            HashMap<Long, FileModel> tmp = new HashMap<>();
-            if (newList != null) {
-                for (FileModel model : newList) {
-                    tmp.put(model.getFileId(), model);
-                }
-
-                int index = 0;
-                for (FileModel model : fileModels) {
-                    if(tmp.containsKey(model.getFileId())) {
-                        fileModels.set(index, tmp.get(model.getFileId()));
-                    }
-                    index ++;
-                }
-            }
-        }
     }
 }

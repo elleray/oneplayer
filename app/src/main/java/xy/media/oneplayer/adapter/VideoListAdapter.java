@@ -1,5 +1,6 @@
 package xy.media.oneplayer.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -80,13 +81,7 @@ public class VideoListAdapter extends RecyclerView.Adapter{
 
     class VideoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
         TextView tvTitle;
-        TextView tvArtist;
-        TextView tvAlbumName;
-        ImageView ivSelect;
-        LinearLayout llArtist;
         ImageView ivCover;
-        ImageView ivOpera;
-        View point;
 
         VideoListContract.Presenter mPresenter;
         VideoInfo musicInfo;
@@ -106,6 +101,8 @@ public class VideoListAdapter extends RecyclerView.Adapter{
                     .error(R.color.video_default);
             transitionOptions = new DrawableTransitionOptions()
                     .crossFade();
+            itemView.setOnClickListener(this);
+
         }
 
         public void setView(VideoInfo info) {
@@ -117,12 +114,13 @@ public class VideoListAdapter extends RecyclerView.Adapter{
                     .apply(options)
                     .transition(transitionOptions)
                     .into(ivCover);
+
         }
 
 
         @Override
         public void onClick(View v) {
-
+            mPresenter.openVideo((Activity)mContext, musicInfo);
         }
 
         @Override

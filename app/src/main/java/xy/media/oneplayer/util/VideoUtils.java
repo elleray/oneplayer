@@ -6,6 +6,7 @@ import android.media.MediaMetadataRetriever;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 
 import xy.media.oneplayer.data.model.VideoInfo;
 import xy.media.oneplayer.gl.Global;
@@ -82,5 +83,55 @@ public class VideoUtils {
         return false;
     }
 
+    public static String getDuration(long time){
+        time = time/1000;
+        SimpleDateFormat format = new SimpleDateFormat("dd");
+
+        long min = 0;
+        long sec = 0;
+        if(time/60 > 0 ){
+            min = (int) (time/60);
+            sec = time - min * 60;
+        } else {
+            min = 0;
+            sec = time;
+        }
+
+        String minu  = String.format("%s", min + "");
+        if(minu.length() < 2){
+            minu = "0" + minu;
+        }
+        String seco = String.format("%s", sec + "");
+        if(seco.length() < 2){
+            seco = "0" + seco;
+        }
+        return  minu + " : " + seco;
+    }
+
+    public static String getShortDuration(long time){
+        time = time/1000;
+        SimpleDateFormat format = new SimpleDateFormat("dd");
+
+        long min = 0;
+        long sec = 0;
+        if(time/60 > 0 ){
+            min = (int) (time/60);
+            sec = time - min * 60;
+        } else {
+            min = 0;
+            sec = time;
+        }
+
+        String minu  = String.format("%s", min + "");
+        if(minu.length() < 2){
+            minu = "0" + minu;
+        }
+        String seco = String.format("%s", sec + "");
+        if(seco.length() < 2){
+            seco = "0" + seco;
+        }
+
+        return minu + ":" + seco;
+    }
 
 }

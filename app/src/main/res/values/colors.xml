@@ -6,5 +6,13 @@
 
     <color name="list_bg">#444444</color>
     <color name="video_default">#F7F7F9</color>
+    <color name="black_1">#000000</color>
+    <color name="black_alpha_70">#b3000000</color>
+    <color name="gray_2">#648598</color>
+    <color name="gray_3">#94B3C4</color>
+    <color name="orange_2">#EE782B</color>
+    <color name="gray_5">#D4DFE5</color>
+    <color name="white_2">#FFFFFF</color>
+    <color name="status_bar_color">#000000</color>
 
 </resources>

@@ -29,7 +29,6 @@ public class VideoPlayerContract {
         void hideController();
         void showVideoCacheLoading();
 
-        void toShareDetailPage(long shareId);
         void hideWaitingView();
         void pause();
     }
@@ -42,7 +41,6 @@ public class VideoPlayerContract {
         void setCurrentVideoDuration(int duration);
         void saveRecentPlayVideo();
 
-        void likeTheVideo(VideoPlayerActivity activity);
         void refreshVideoLikeCountAndCommendCount();
         void downloadVideo(Activity activity);
         boolean isAlreadyDownload();

@@ -6,6 +6,7 @@
 
 package xy.media.oneplayer.videoplayer;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,6 +38,7 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,6 +46,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
+
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,45 +57,34 @@ import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import me.godap.R;
-import me.godap.channel.modules.share.detail.ShareDetailActivity;
-import me.godap.channel.modules.share.detail.ShareDetailContract;
-import me.godap.filecenter.io.VideoPlayedModel;
-import me.godap.filecenter.video.VideoDataHelper;
-import me.godap.lib.mod.file.constants.Const;
-import me.godap.lib.mod.file.data_helper.MusicBaseDataHelper;
-import me.godap.lib.mod.file.event.DownloadVideoUpdateEvent;
-import me.godap.lib.mod.file.greendao.BaseFile;
-import me.godap.lib.mod.file.io.FileLibListenerManager;
-import me.godap.lib.mod.file.io.OnOperaFileListener;
-import me.godap.lib.mod.file.listener.OperaListener;
-import me.godap.lib.mod.file.listener.OrientationSensorListener;
-import me.godap.lib.mod.file.music.MusicPlayerController;
-import me.godap.lib.mod.file.music.MusicUtil;
-import me.godap.lib.mod.file.selectmode.SelectFileHelper;
-import me.godap.lib.mod.file.ui.CustomToast;
-import me.godap.lib.mod.file.ui.VerticalSeekBar;
-import me.godap.lib.mod.file.utils.DeviceInfo;
-import me.godap.lib.mod.file.utils.FileUtil;
-import me.godap.lib.mod.file.utils.ToastUtil;
-import me.godap.lib.pub.log.GLog;
-import me.godap.lib.utils.CommonUtil;
-import me.godap.lib.utils.FastClickUtil;
-import me.godap.lib.utils.GodapFileUtil;
-import me.godap.lib.utils.TextUtil;
-import me.godap.lib.utils.UiUtils;
-import me.godap.ui.base.Base2Activity;
-import me.godap.ui.view.progressdialog.ProgressDialogFactory;
+import xy.media.oneplayer.R;
+import xy.media.oneplayer.data.greendao.BaseFile;
+import xy.media.oneplayer.data.helper.VideoDataHelper;
+import xy.media.oneplayer.data.model.DownloadVideoUpdateEvent;
+import xy.media.oneplayer.gl.Const;
+import xy.media.oneplayer.io.OnOperaFileListener;
+import xy.media.oneplayer.io.VideoPlayedModel;
+import xy.media.oneplayer.listener.OperaListener;
+import xy.media.oneplayer.listener.OrientationSensorListener;
+import xy.media.oneplayer.log.log.GLog;
+import xy.media.oneplayer.manager.FileLibListenerManager;
+import xy.media.oneplayer.util.CommonUtil;
+import xy.media.oneplayer.util.DeviceInfo;
+import xy.media.oneplayer.util.FastClickUtil;
+import xy.media.oneplayer.util.TextUtil;
+import xy.media.oneplayer.util.ToastUtil;
+import xy.media.oneplayer.util.UiUtils;
+import xy.media.oneplayer.util.VideoUtils;
+import xy.media.oneplayer.view.VerticalSeekBar;
+import xy.media.oneplayer.view.base.BaseActivity;
 
-import static me.godap.filecenter.io.OpenVideoManager.OPEN_TYPE_LIBRARY_MODE;
-import static me.godap.filecenter.io.OpenVideoManager.OPEN_TYPE_NO_CHAT_MODE;
-import static me.godap.filecenter.io.OpenVideoManager.OPEN_TYPE_SHARE_MODE;
-import static me.godap.filecenter.io.OpenVideoManager.OPEN_TYPE_SIMPLE_MODE;
+import static xy.media.oneplayer.io.OpenVideoManager.OPEN_TYPE_LIBRARY_MODE;
+import static xy.media.oneplayer.io.OpenVideoManager.OPEN_TYPE_NO_CHAT_MODE;
+import static xy.media.oneplayer.io.OpenVideoManager.OPEN_TYPE_SHARE_MODE;
+import static xy.media.oneplayer.io.OpenVideoManager.OPEN_TYPE_SIMPLE_MODE;
 
-public class VideoPlayerActivity extends Base2Activity implements OnClickListener,
+public class VideoPlayerActivity extends BaseActivity implements OnClickListener,
         OnSeekBarChangeListener, Callback, OnBufferingUpdateListener,
         OnCompletionListener, OnPreparedListener, OnVideoSizeChangedListener, OnErrorListener, VideoPlayerContract.View{
 
@@ -198,7 +190,7 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
                 case 0:
                     if (getActivity().mMediaPlayer != null) {
                         long position = getActivity().mMediaPlayer.getCurrentPosition();
-                        getActivity().mTvCurrentTime.setText(MusicUtil.getDuration(position));
+                        getActivity().mTvCurrentTime.setText(VideoUtils.getDuration(position));
                         if (! getActivity().mIsProgressChanged) {
                             getActivity().mProgressBar.setProgress((int) position);
                         }
@@ -231,6 +223,8 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -238,7 +232,7 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
         setContentView(R.layout.activity_video_player);
         mContext = this;
 
-        MusicPlayerController.requestAudioFocus(this);
+//        MusicPlayerController.requestAudioFocus(this);
 
         mRlController = findViewById(R.id.controler_rl);
         mSurfaceView = (SurfaceView) this.findViewById(R.id.content_sv);
@@ -283,9 +277,9 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
         updateVolume();
         initListener();
         setTimeLoop();
-        if (MusicBaseDataHelper.getInstance().isPlaying()) {
-            MusicPlayerController.pause(this);
-        }
+//        if (MusicBaseDataHelper.getInstance().isPlaying()) {
+//            MusicPlayerController.pause(this);
+//        }
         registerBroadcastReceiver();
 
         //重力感应，屏幕切换
@@ -307,7 +301,7 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
 
     private void setTotalTimeTxView(int duration){
         if (duration > 0) {
-            mTotalTime.setText(MusicUtil.getDuration(duration));
+            mTotalTime.setText(VideoUtils.getDuration(duration));
         }
     }
 
@@ -407,14 +401,6 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
     public void setView(VideoPlayerDataHelper data) {
         mPresenter.setTitleView();
         setNextBtnView(data.isPlayingVideolist());
-
-        //只用刷新like，不用刷新comment
-        if(VideoPlayerDataHelper.getInstance().isShareFile()) {
-            setVideoLikeCount(data.getLikeCount());
-            setShareCommentCount(data.getShareCommentCount());
-
-            setDownloadBtn(data);
-        }
     }
 
     @Override
@@ -523,14 +509,6 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
         intent.putExtra("play_video_path", dataHelper.getCurrentPath());
         setResult(Const.RESULT_CODE.VIDEO_PLAYER_ACTIVITY, intent);
 
-        SelectFileHelper selectFileHelper = dataHelper.getSelectFileHelper();
-        if (selectFileHelper != null) {
-            for (BaseFile baseFile : selectFileHelper.getSelectFiles()) {
-                baseFile.setSelected(false);
-            }
-            selectFileHelper.clearAll();
-            selectFileHelper.setIsInSelectMode(false);
-        }
 
         if (dataHelper.isMute()) {
             mPresenter.closeMute();
@@ -594,14 +572,14 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
         mProgressBar.setMax(getDuration());
         mHolder.setFixedSize(mVideoWidth, mVideoHeight);
 
-        mTvCurrentTime.setText(MusicUtil.getDuration(pos));
+        mTvCurrentTime.setText(VideoUtils.getDuration(pos));
         mProgressBar.setProgress(pos);
         if (pos > 0 && ! VideoPlayerDataHelper.getInstance().isDownloadingFile()) {
             mMediaPlayer.seekTo(pos);
         }
         start();
 
-        mTotalTime.setText(MusicUtil.getDuration(getDuration()));
+        mTotalTime.setText(VideoUtils.getDuration(getDuration()));
         mPresenter.setTitleView();
     }
 
@@ -646,14 +624,7 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
                 } else {
                     mMediaPlayer.reset();
                 }
-                if (FileUtil.isGodapFile(path)) {
-                    FileInputStream inputStream = new FileInputStream(path);
-                    FileDescriptor fileDescriptor = inputStream.getFD();
-                    mMediaPlayer.setDataSource(fileDescriptor, GodapFileUtil.KEY_WORD.length(), inputStream.available() - GodapFileUtil.KEY_WORD.length());
-                } else {
-                    mMediaPlayer.setDataSource(path);
-                }
-
+                mMediaPlayer.setDataSource(path);
                 mMediaPlayer.prepare();
             } catch (Exception e) {
                 finish();
@@ -764,7 +735,7 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
 
                             @Override
                             public void onFailed(String str) {
-                                mActivity.runOnUiThread(new Runnable() {
+                                VideoPlayerActivity.this.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         ToastUtil.show("删除失败");
@@ -798,16 +769,8 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
                 break;
             }
 
-            case TAG_SHARE_DETAIL_BTN: {
-                toShareDetailPage(VideoPlayerDataHelper.getInstance().getShareId());
-                break;
-            }
             case TAG_DOWNALOD_BTN: {
                 mPresenter.downloadVideo(this);
-                break;
-            }
-            case TAG_LIKE_BTN: {
-                mPresenter.likeTheVideo(this);
                 break;
             }
             default:
@@ -818,20 +781,7 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
     }
 
     @Override
-    public void toShareDetailPage(long shareId) {
-        Intent intent = new Intent(this, ShareDetailActivity.class);
-        intent.putExtra(ShareDetailContract.FIELD_USER_ID, 0);
-        intent.putExtra(ShareDetailContract.FIELD_CHANNEL_ID, 0);
-        intent.putExtra(ShareDetailContract.FIELD_SHARE_ID, shareId);
-        startActivityForResult(intent, Const.REQUEST_CODE.TO_SHARE_DETAIL_ACTIVITY);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Const.REQUEST_CODE.SELECT_FILE_VIEW) {
-        } else if (requestCode == Const.REQUEST_CODE.TO_SHARE_DETAIL_ACTIVITY) {
-            mPresenter.refreshVideoLikeCountAndCommendCount();
-        }
     }
 
     @Override
@@ -941,7 +891,7 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
                 mSeekScrollTime = System.currentTimeMillis();
 
                 GLog.d("progress change : " + progress);
-                mTvCurrentTime.setText(MusicUtil.getDuration(progress));
+                mTvCurrentTime.setText(VideoUtils.getDuration(progress));
             } else {
                 GLog.d("mMediaPlayer is null");
             }
@@ -1103,7 +1053,7 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
             if (gotNextVideo) {
                 setView(dataHelper);
             } else {
-                mTvCurrentTime.setText(MusicUtil.getDuration(0));
+                mTvCurrentTime.setText(VideoUtils.getDuration(0));
                 mProgressBar.setProgress(0);
                 mIvPlayBigBtn.setImageResource(R.drawable.btn_video_player_play_big);
 
@@ -1263,7 +1213,7 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
                     return false;
                 }
                 mProgressBar.setProgress(mPlayingTime);
-                showTimePosText(MusicUtil.getShortDuration(mPlayingTime) + "/" + MusicUtil.getShortDuration(videoTotalTime));
+                showTimePosText(VideoUtils.getShortDuration(mPlayingTime) + "/" + VideoUtils.getShortDuration(videoTotalTime));
                 mIsProgressChanged = true;
             }
         } else if (mAdjustType == AdjustType.Volume) {
@@ -1496,57 +1446,17 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
         ToastUtil.show("打开视频失败");
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(DownloadVideoUpdateEvent event){
-        if (! me.godap.lib.mod.file.utils.TextUtil.isNull(event.mVideoPath) &&
-                event.mVideoPath.equals(VideoPlayerDataHelper.getInstance().getCurrentPath())
-                && mMediaPlayer != null) {
-            int duration  = getDuration();
-            int progress =(int)(  event.mPercent * duration );
-            int completeDownload =  (Math.abs(1-event.mPercent) < 0.01) ? 1 : 0;
-            if (mUpdateHandler != null) {
-                Message msg = new Message();
-                msg.what = DOWNING_MSG_WHAT;
-                msg.arg1 = progress;
-                msg.arg2 = completeDownload;
-                mUpdateHandler.sendMessage(msg);
-            }
-        }
-    }
 
     private boolean isOverDownloadProgress(int prg) {
         return mSecondProgressValue > 0 &&  prg+1500 >= mSecondProgressValue;
     }
 
     private void showOverSecondProgressNotice(){
-        if (FastClickUtil.isFastClick()) {
-            return;
-        }
-        pause();
-        mPausedSecondProgressValue = mSecondProgressValue;
 
-        CustomToast customToast = new CustomToast(this, getString(R.string.only_play_video_here));
-        customToast.show();
-        showVideoCacheLoading();
     }
 
     @Override
     public void showVideoCacheLoading() {
-        mWaitingDialog = ProgressDialogFactory.createVideoLoadingDialog(this, true);
-        mWaitingDialog.show();
-
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                GLog.d("video download process , mSecondProgressValue = " + mSecondProgressValue
-                + ", mPausedSecondProgressValue = " + mPausedSecondProgressValue);
-                if(mSecondProgressValue - mPausedSecondProgressValue > 30 * 1000) {
-                    mWaitingDialog.dismiss();
-                }
-            }
-        }, 0, 1000);
     }
 
     private int getDuration() {
@@ -1597,25 +1507,29 @@ public class VideoPlayerActivity extends Base2Activity implements OnClickListene
 
     @Override
     public void setDownloadBtn(VideoPlayerDataHelper dataHelper) {
-        if(dataHelper.isMineShare()) {
-            mRlDownload.setVisibility(View.GONE);
-            return;
-        }
-
-        mIvDownloadBtn.setImageResource(
-                mPresenter.isAlreadyDownload() ? R.drawable.btn_already_download_selector :  R.drawable.btn_download_selector);
     }
 
     @Override
     public void hideWaitingView() {
-        super.hideWaitingView();
         start();
     }
 
-
-    @Override
-    public void showWaitingView(String message) {
-        pause();
-        super.showWaitingView(message);
+    @SuppressWarnings("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(DownloadVideoUpdateEvent event){
+        if (! TextUtil.isNull(event.mVideoPath) &&
+                event.mVideoPath.equals(VideoPlayerDataHelper.getInstance().getCurrentPath())
+                && mMediaPlayer != null) {
+            int duration  = getDuration();
+            int progress =(int)(  event.mPercent * duration );
+            int completeDownload =  (Math.abs(1-event.mPercent) < 0.01) ? 1 : 0;
+            if (mUpdateHandler != null) {
+                Message msg = new Message();
+                msg.what = DOWNING_MSG_WHAT;
+                msg.arg1 = progress;
+                msg.arg2 = completeDownload;
+                mUpdateHandler.sendMessage(msg);
+            }
+        }
     }
 }

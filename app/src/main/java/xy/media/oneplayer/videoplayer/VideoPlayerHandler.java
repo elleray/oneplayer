@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 
-import me.godap.filecenter.io.VideoPlayedModel;
+import xy.media.oneplayer.io.VideoPlayedModel;
+
 
 /**
  * Created by elleray on 2017/3/21.

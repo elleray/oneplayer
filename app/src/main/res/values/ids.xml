@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /**
+  ~ * Copyright (c) 2015. Dingtone, inc. All rights reserved.
+  ~ */
+  -->
+
+<resources>
+    <item name="select_mode_send_bottom" type="id"/>
+    <item name="select_mode_delete_bottom" type="id"/>
+    <item name="select_mode_deleting_bottom" type="id"/>
+    <item name="select_mode_delete_cancel_confirm_bottm" type="id"/>
+    <item name="select_mode_backup_bottom" type="id"/>
+    <item name="select_mode_select_bottom" type="id"/>
+    <item name="iv_close" type="id"/>
+    <item name="et_1" type="id"/>
+    <item name="et_2" type="id"/>
+    <item name="et_3" type="id"/>
+    <item name="btn_1" type="id"/>
+    <item name="btn_2" type="id"/>
+    <item name="btn_3" type="id"/>
+    <item name="ll_double_btn" type="id"/>
+    <item name="tv_desc" type="id"/>
+    <item name="tv_link" type="id"/>
+    <item name="fl_custom_view" type="id"/>
+
+</resources>
