@@ -9,12 +9,19 @@ import android.view.View;
 import android.widget.Toast;
 
 
+import java.util.ArrayList;
+
+import rx.Observable;
+import rx.Observer;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import xy.media.oneplayer.VideolistPresenter;
 import xy.media.oneplayer.io.VideoPlayedModel;
 import xy.media.oneplayer.io.VideoPlayerUpdateHelper;
 import xy.media.oneplayer.log.log.GLog;
+import xy.media.oneplayer.player.subtitles.SubtitlesModel;
 import xy.media.oneplayer.util.FastClickUtil;
 
 
@@ -165,5 +172,34 @@ public class VideoPlayerPresenter implements VideoPlayerContract.Presenter {
         if(mSubscription != null){
             mSubscription.unsubscribe();
         }
+    }
+
+    @Override
+    public void loadSubtitles() {
+        rx.Observable.create(new rx.Observable.OnSubscribe<ArrayList<SubtitlesModel>>() {
+            @Override
+            public void call(Subscriber<? super ArrayList<SubtitlesModel>> subscriber) {
+                ArrayList<SubtitlesModel> models = mDataHelper.readSubTitles();
+                subscriber.onNext(models);
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ArrayList<SubtitlesModel>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        GLog.e(e.toString());
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<SubtitlesModel> models) {
+                        mView.setSubtitleData(models);
+                    }
+                });
     }
 }

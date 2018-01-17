@@ -69,6 +69,6 @@ public class MainActivity extends AppCompatActivity implements VideoListContract
 
     @Override
     public void reLoad() {
-
+        mPresenter.loadData(true, false);
     }
 }

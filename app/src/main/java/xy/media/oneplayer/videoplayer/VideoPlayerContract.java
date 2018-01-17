@@ -3,7 +3,10 @@ package xy.media.oneplayer.videoplayer;
 import android.app.Activity;
 import android.content.Intent;
 
+import java.util.ArrayList;
+
 import xy.media.oneplayer.io.VideoPlayedModel;
+import xy.media.oneplayer.player.subtitles.SubtitlesModel;
 
 /**
  * Created by tony on 2017/12/18.
@@ -31,6 +34,7 @@ public class VideoPlayerContract {
 
         void hideWaitingView();
         void pause();
+        void setSubtitleData(ArrayList<SubtitlesModel> list);
     }
 
     public interface Presenter{
@@ -50,5 +54,6 @@ public class VideoPlayerContract {
         boolean playNext(boolean isAutoPlay, Activity activity);
         void replay();
         void unSubscription();
+        void loadSubtitles();
     }
 }

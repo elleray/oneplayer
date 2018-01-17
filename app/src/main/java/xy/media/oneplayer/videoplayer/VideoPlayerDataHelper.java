@@ -16,6 +16,9 @@ import xy.media.oneplayer.data.greendao.VideoPlayRecord;
 import xy.media.oneplayer.io.OpenVideoManager;
 import xy.media.oneplayer.io.VideoPlayedModel;
 import xy.media.oneplayer.log.log.GLog;
+import xy.media.oneplayer.manager.StorageManager;
+import xy.media.oneplayer.player.subtitles.SubtitlesCoding;
+import xy.media.oneplayer.player.subtitles.SubtitlesModel;
 import xy.media.oneplayer.util.FileUtil;
 import xy.media.oneplayer.util.SharePreferenceUtil;
 import xy.media.oneplayer.util.TextUtil;
@@ -40,6 +43,8 @@ public class VideoPlayerDataHelper {
     private VideoPlayedModel mVideo = null;
     private ArrayList<VideoPlayedModel> mVideoList = null;
     private boolean mIsMineShare;
+
+    private ArrayList<SubtitlesModel> mSubtitleList = new ArrayList<>();
 
 
 
@@ -308,5 +313,13 @@ public class VideoPlayerDataHelper {
             }
         }
         return -1;
+    }
+
+    public ArrayList<SubtitlesModel> readSubTitles(){
+                String path = StorageManager.getInstance().getCurrentGodapRootPath();
+                String subtitlepath = path + File.separator + "The.Nile.Hilton.Incident.2017.MULTi.1080p.BluRay.x264-LOST.简英.srt";
+                SubtitlesCoding.readFile(subtitlepath);
+                mSubtitleList = SubtitlesCoding.getSubtitles();
+                return mSubtitleList;
     }
 }

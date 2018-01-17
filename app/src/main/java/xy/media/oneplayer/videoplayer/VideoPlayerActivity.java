@@ -56,6 +56,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import xy.media.oneplayer.R;
@@ -69,6 +70,8 @@ import xy.media.oneplayer.listener.OperaListener;
 import xy.media.oneplayer.listener.OrientationSensorListener;
 import xy.media.oneplayer.log.log.GLog;
 import xy.media.oneplayer.manager.FileLibListenerManager;
+import xy.media.oneplayer.player.subtitles.SubtitleView;
+import xy.media.oneplayer.player.subtitles.SubtitlesModel;
 import xy.media.oneplayer.util.CommonUtil;
 import xy.media.oneplayer.util.DeviceInfo;
 import xy.media.oneplayer.util.FastClickUtil;
@@ -139,6 +142,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
     private LinearLayout mLlBackImage;
     private RelativeLayout mRlPlayBig, mRlShare, mRlOpera, mRlLike, mRlComment , mRlDownload;
     private VerticalSeekBar mVoiceSeekBar;
+    private SubtitleView mSubTitleView;
 
     private SurfaceHolder mHolder;
 
@@ -194,6 +198,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
                         if (! getActivity().mIsProgressChanged) {
                             getActivity().mProgressBar.setProgress((int) position);
                         }
+                        getActivity().mSubTitleView.seekToTime(position);
                         sendEmptyMessageDelayed(0, SEEK_BAR_UPDATE_DELAY);
                     }
                     break;
@@ -266,6 +271,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
         mItShareCommentCount = (TextView) findViewById(R.id.share_detail_num_tv);
         mTvLikeCount = (TextView) findViewById(R.id.share_like_num_tv);
         mIvDownloadBtn = (ImageView) findViewById(R.id.share_download_iv);
+        mSubTitleView = (SubtitleView) findViewById(R.id.subtitile_sv) ;
 
         mGestureDetector = new GestureDetector(this, new MyGestureListener());
         registerReceiver(batteryChangedReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -395,6 +401,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
 
         //保存最新播放的视频
         mPresenter.saveRecentPlayVideo();
+
+        //加载字幕
+        mPresenter.loadSubtitles();
+
     }
 
     @Override
@@ -1531,5 +1541,10 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
                 mUpdateHandler.sendMessage(msg);
             }
         }
+    }
+
+    @Override
+    public void setSubtitleData(ArrayList<SubtitlesModel> list) {
+        mSubTitleView.setData(list);
     }
 }

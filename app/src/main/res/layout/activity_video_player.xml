@@ -20,6 +20,15 @@
         android:textColor="@color/white_2"
         android:textSize="45sp"/>
 
+    <xy.media.oneplayer.player.subtitles.SubtitleView
+        android:id="@+id/subtitile_sv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp">
+    </xy.media.oneplayer.player.subtitles.SubtitleView>
+
     <RelativeLayout
         android:id="@+id/top_rl"
         android:layout_width="match_parent"
