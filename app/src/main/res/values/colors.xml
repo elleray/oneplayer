@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#ff80bf</color>
+    <color name="colorPrimaryDark">#ff66b2</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="list_bg">#444444</color>
@@ -12,7 +12,10 @@
     <color name="gray_3">#94B3C4</color>
     <color name="orange_2">#EE782B</color>
     <color name="gray_5">#D4DFE5</color>
-    <color name="white_2">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="status_bar_color">#000000</color>
+
+    <color name="main_color">#ff80bf</color>
+
 
 </resources>

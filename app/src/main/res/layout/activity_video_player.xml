@@ -17,7 +17,7 @@
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="01:22"
-        android:textColor="@color/white_2"
+        android:textColor="@color/white"
         android:textSize="45sp"/>
 
     <xy.media.oneplayer.player.subtitles.SubtitleView
@@ -75,7 +75,7 @@
                 android:layout_centerVertical="true"
                 android:gravity="center"
                 android:text="00:00"
-                android:textColor="@color/white_2"
+                android:textColor="@color/white"
                 android:textSize="16dp" />
 
             <TextView
@@ -242,7 +242,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="00:00"
-                    android:textColor="@color/white_2"
+                    android:textColor="@color/white"
                     android:textSize="12sp"
                     android:layout_below="@+id/battery_view_out_iv" />
             </RelativeLayout>
@@ -281,7 +281,7 @@
                             android:layout_toEndOf="@+id/share_like_iv"
                             android:layout_toRightOf="@+id/share_like_iv"
                             android:text=""
-                            android:textColor="@color/white_2"
+                            android:textColor="@color/white"
                             android:textSize="11sp" />
                     </RelativeLayout>
 
@@ -302,7 +302,7 @@
                             android:layout_toEndOf="@+id/share_detail_iv"
                             android:layout_toRightOf="@+id/share_detail_iv"
                             android:text=""
-                            android:textColor="@color/white_2"
+                            android:textColor="@color/white"
                             android:textSize="11sp" />
                     </RelativeLayout>
 

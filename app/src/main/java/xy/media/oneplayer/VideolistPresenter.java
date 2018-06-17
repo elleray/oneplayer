@@ -143,7 +143,6 @@ public class VideolistPresenter implements VideoListContract.Presenter {
     }
 
 
-    private CheckVideoUpdateAction sCheckVideoUpdateAction = new CheckVideoUpdateAction();
     private static class CheckVideoUpdateAction implements Observable.OnSubscribe<Boolean>{
         @Override
         public void call(Subscriber<? super Boolean> subscriber) {
