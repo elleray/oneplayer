@@ -1,15 +1,7 @@
 package xy.media.oneplayer.data.helper;
 
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
-
 import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,7 +10,6 @@ import java.util.List;
 
 import xy.media.oneplayer.data.VideoBaseDataHelper;
 import xy.media.oneplayer.data.dbhelper.CenterFileDBManager;
-import xy.media.oneplayer.data.dbhelper.VideoGroupEncryptDBManager;
 import xy.media.oneplayer.data.dbhelper.VideoPositionDBmanager;
 import xy.media.oneplayer.data.greendao.BaseFile;
 import xy.media.oneplayer.data.greendao.CenterFile;
@@ -109,7 +100,7 @@ public class VideoDataHelper extends VideoBaseDataHelper {
             if (list != null) {
                 ArrayList<CenterFile> filesNeedDelete = new ArrayList<>();
                 for (CenterFile file : list) {
-                    if (filterWhiteList(file.getPath())) {
+                    if (filterVideo(file.getPath())) {
                         String path = file.getPath();
                         long duration = file.getDuration();
                         VideoInfo videoInfo = getVideoInfoByPath(path, duration, TAB_GODAP);
@@ -156,7 +147,7 @@ public class VideoDataHelper extends VideoBaseDataHelper {
             if (list != null && ! list.isEmpty()) {
                 ArrayList<CenterFile> filesNeedDelete = new ArrayList<>();
                 for (CenterFile file : list) {
-                    if (filterWhiteList(file.getPath())) {
+                    if (filterVideo(file.getPath())) {
                         String path = file.getPath();
                         long duration = file.getDuration();
                         VideoInfo videoInfo = getVideoInfoByPath(path, duration, LOCAL_VIDEO);
@@ -182,25 +173,6 @@ public class VideoDataHelper extends VideoBaseDataHelper {
             GLog.d("Local video num = " + res.size());
             mLocalVideos = res;
             return res;
-        }
-    }
-
-    public void scanLocalVideos(){
-        GLog.d("scan local video");
-        int recentPicNum = mLocalVideos == null ? 0 : mLocalVideos.size();
-        ArrayList<VideoInfo> infos = scanLocalContent();
-
-
-        if (infos.size() != recentPicNum) {
-            GLog.d("has new video");
-            addToCenterFileDB(infos);
-            setVideoPlayRecord(infos);
-
-            mLocalVideos = infos;
-//            FileUpdateManager.sendBroadCastToFreshFileCenter(me.godap.lib.mod.file.io.Global.context, FileUtil.FILE_TYPE_VIDEO);
-            GLog.d("scan video end");
-        } else {
-            GLog.d("have no new video file");
         }
     }
 

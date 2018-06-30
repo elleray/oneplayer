@@ -6,6 +6,6 @@
         <clip android:drawable="@color/gray_3" />
     </item>
     <item android:id="@android:id/progress">
-        <clip android:drawable="@color/orange_2" />
+        <clip android:drawable="@color/colorPrimary" />
     </item>
 </layer-list>

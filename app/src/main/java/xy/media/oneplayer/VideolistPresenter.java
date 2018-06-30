@@ -153,7 +153,7 @@ public class VideolistPresenter implements VideoListContract.Presenter {
                 Iterator<CenterFile> iterator = dbFiles.iterator();
                 while (iterator.hasNext()) {
                     CenterFile centerFile = iterator.next();
-                    if (! VideoDataHelper.getInstance().filterWhiteList(centerFile.getPath())) {
+                    if (! VideoDataHelper.getInstance().filterVideo(centerFile.getPath())) {
                         iterator.remove();
                     }
                 }

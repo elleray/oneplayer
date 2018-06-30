@@ -103,7 +103,8 @@
                 android:layout_toRightOf="@id/current_time_tv"
                 android:layout_toEndOf="@id/current_time_tv"
                 android:layout_gravity="center_vertical"
-                style="@style/Widget.SeekBar.Normal"
+                android:progressDrawable="@drawable/video_seekbar"
+                android:thumb="@drawable/video_seekbar_thumb"
                 android:minHeight="3dp"
                 android:maxHeight="3dp" />
 
@@ -142,7 +143,8 @@
             android:id="@+id/voice_progress_seekbar"
             android:layout_width="wrap_content"
             android:layout_height="150dp"
-            style="@style/Widget.SeekBar.Normal"
+            android:progressDrawable="@drawable/video_seekbar"
+            android:thumb="@drawable/video_seekbar_thumb"
             android:verticalScrollbarPosition="left"
             android:minHeight="3dp"
             android:maxHeight="3dp"

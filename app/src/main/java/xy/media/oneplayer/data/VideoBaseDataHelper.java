@@ -1,14 +1,11 @@
 package xy.media.oneplayer.data;
 
-import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -171,7 +168,7 @@ public class VideoBaseDataHelper {
         ArrayList<String> paths = FileBaseDataHelper.getInstance().searchLocalVideoFile();
         if(paths != null){
             for (String path:paths){
-                if(filterWhiteList(path)){
+                if(filterVideo(path)){
                     File file = new File(path);
                     if(file.length() == 0){
                         continue;
@@ -246,14 +243,11 @@ public class VideoBaseDataHelper {
         return videoInfos;
     }
 
-    public boolean filterWhiteList(String path){
-        String lowPath = path.toLowerCase();
-        for (String keyword : mWhiteListKeywordInPaths){
-            if(lowPath.contains(keyword)){
-                return true;
-            }
+    public boolean filterVideo(String path){
+        if (path.toLowerCase().contains("cache")) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public void addToCenterFileDB(ArrayList<VideoInfo> videoInfos){

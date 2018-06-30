@@ -24,4 +24,8 @@
     <item name="tv_link" type="id"/>
     <item name="fl_custom_view" type="id"/>
 
+    <item name="progress" type="id"/>
+    <item name="secondaryProgress" type="id"/>
+    <item name="background" type="id"/>
+
 </resources>

@@ -16,6 +16,7 @@
     <color name="status_bar_color">#000000</color>
 
     <color name="main_color">#ff80bf</color>
-
+    <color name="pink">#ff80bf</color>
+    <color name="light_pink">#ffcce5</color>
 
 </resources>
