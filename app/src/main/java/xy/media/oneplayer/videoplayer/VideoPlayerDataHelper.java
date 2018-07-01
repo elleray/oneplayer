@@ -22,6 +22,7 @@ import xy.media.oneplayer.player.subtitles.SubtitlesModel;
 import xy.media.oneplayer.util.FileUtil;
 import xy.media.oneplayer.util.SharePreferenceUtil;
 import xy.media.oneplayer.util.TextUtil;
+import xy.media.oneplayer.util.UnicodeUtil;
 
 /**
  * Created by tony on 2017/12/18.
@@ -315,11 +316,10 @@ public class VideoPlayerDataHelper {
         return -1;
     }
 
-    public ArrayList<SubtitlesModel> readSubTitles(){
-                String path = StorageManager.getInstance().getCurrentGodapRootPath();
-                String subtitlepath = path + File.separator + "The.Nile.Hilton.Incident.2017.MULTi.1080p.BluRay.x264-LOST.简英.srt";
-                SubtitlesCoding.readFile(subtitlepath);
-                mSubtitleList = SubtitlesCoding.getSubtitles();
-                return mSubtitleList;
+    public ArrayList<SubtitlesModel> readSubTitles(String subtitlePath){
+        String charSet = UnicodeUtil.getCharset(new File(subtitlePath));
+        SubtitlesCoding.readFile(subtitlePath, charSet);
+        mSubtitleList = SubtitlesCoding.getSubtitles();
+        return mSubtitleList;
     }
 }

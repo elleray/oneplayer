@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import xy.media.oneplayer.gl.Global;
 import xy.media.oneplayer.log.log.GLog;
 import xy.media.oneplayer.util.CommonUtil;
+import xy.media.oneplayer.util.TextUtil;
 
 /**
  * @descraption 用于解析字幕
@@ -45,7 +46,10 @@ public class SubtitlesCoding {
      *
      * @param path
      */
-    public static void readFile(String path) {
+    public static void readFile(String path, String charSetName) {
+        if (TextUtil.isNull(charSetName)) {
+            charSetName = "UTF-8";
+        }
         list.clear();
         String line;
         FileInputStream is;
@@ -62,7 +66,7 @@ public class SubtitlesCoding {
         try {
             is = new FileInputStream(subtitlesFile);
             try {
-                in = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                in = new BufferedReader(new InputStreamReader(is, charSetName));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

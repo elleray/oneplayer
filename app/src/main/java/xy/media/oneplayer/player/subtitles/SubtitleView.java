@@ -112,6 +112,7 @@ public class SubtitleView extends LinearLayout implements ISubtitleControl, Subt
         }
         GLog.d( ":" + position + "/" + data.get(data.size() - 1).end);
         if (model != null) {
+            GLog.d("show sub ,china =  " + model.contextC + ", english = " + model.contextE);
             setItemSubtitleChina(model.contextC);
             setItemSubtitleEnglish(model.contextE);
         } else {
@@ -126,6 +127,8 @@ public class SubtitleView extends LinearLayout implements ISubtitleControl, Subt
             model = searchSubByTime(data, currentTime);
         }
         if (model != null) {
+            GLog.d("show sub ,china =  " + model.contextC + ", english = " + model.contextE);
+
             setItemSubtitleChina(model.contextC);
             setItemSubtitleEnglish(model.contextE);
         } else {
@@ -245,12 +248,12 @@ public class SubtitleView extends LinearLayout implements ISubtitleControl, Subt
     @Override
     public void ClickDown()
     {
-        Toast.makeText(context, "ClickDown", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "ClickDown", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void ClickUp()
     {
-        Toast.makeText(context, "ClickUp", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "ClickUp", Toast.LENGTH_SHORT).show();
     }
 }

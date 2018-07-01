@@ -38,7 +38,7 @@ public class FileBaseDataHelper {
     private String[] mDocSuffix = {".doc", ".docx",".xls", ".xlsx", ".pdf", ".ppt", ".pptx"};
     private String[] mTxtSuffix = {".txt", ".chm", ".ebk", ".umb"};
     private String[] mZipSuffix = {".zip", ".rar", ".7z", ".iso"};
-    private String[] mVideoSuffix = {".mp4", ".avi"};
+    private String[] mVideoSuffix = {".mp4", ".avi", "rmvb", "mkv"};
     private String[] mApkSuffix = {".apk"};
     private HashMap<String, Integer> mDocSuffixType = new HashMap<String, Integer>();
     protected HashSet<String> mHasRefreshContainer = new HashSet<>();

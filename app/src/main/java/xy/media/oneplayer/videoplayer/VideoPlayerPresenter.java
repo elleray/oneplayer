@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.Toast;
 
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.Observable;
 import rx.Observer;
@@ -18,11 +20,15 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import xy.media.oneplayer.VideolistPresenter;
+import xy.media.oneplayer.data.FileBaseDataHelper;
+import xy.media.oneplayer.data.greendao.BaseFile;
 import xy.media.oneplayer.io.VideoPlayedModel;
 import xy.media.oneplayer.io.VideoPlayerUpdateHelper;
 import xy.media.oneplayer.log.log.GLog;
 import xy.media.oneplayer.player.subtitles.SubtitlesModel;
 import xy.media.oneplayer.util.FastClickUtil;
+import xy.media.oneplayer.util.FileUtil;
+import xy.media.oneplayer.util.TextUtil;
 
 
 /**
@@ -176,10 +182,17 @@ public class VideoPlayerPresenter implements VideoPlayerContract.Presenter {
 
     @Override
     public void loadSubtitles() {
+
         rx.Observable.create(new rx.Observable.OnSubscribe<ArrayList<SubtitlesModel>>() {
             @Override
             public void call(Subscriber<? super ArrayList<SubtitlesModel>> subscriber) {
-                ArrayList<SubtitlesModel> models = mDataHelper.readSubTitles();
+                String path = mDataHelper.getVideo().getFilePath();
+                File file = new File(path);
+                String parentFolderPath = file.getParentFile().getPath();
+
+                String subtitleFilePath = findSubtitleFileInfolder(parentFolderPath);
+
+                ArrayList<SubtitlesModel> models = mDataHelper.readSubTitles(subtitleFilePath);
                 subscriber.onNext(models);
                 subscriber.onCompleted();
             }
@@ -201,5 +214,27 @@ public class VideoPlayerPresenter implements VideoPlayerContract.Presenter {
                         mView.setSubtitleData(models);
                     }
                 });
+    }
+
+    private String findSubtitleFileInfolder(String folderPath) {
+        if (TextUtil.isNull(folderPath)) {
+            return "";
+        }
+        if (! FileUtil.checkFileExist(folderPath)) {
+            return "";
+        }
+        File folder = new File(folderPath);
+        if (! folder.isDirectory()) {
+            return "";
+        }
+
+        List<BaseFile> files = FileBaseDataHelper.getInstance().getFiles(folderPath);
+        for (BaseFile baseFile : files) {
+            if (baseFile.getPath().endsWith(".srt")) {
+                return baseFile.getPath();
+            }
+        }
+
+        return "";
     }
 }

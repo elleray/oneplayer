@@ -101,6 +101,7 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
     private final int MINUTES_STEP_SMALL = 1000;
     private static final int TIME_MSG_WHAT = 2;
     private static final int DOWNING_MSG_WHAT = 3;
+    private static final int PARSE_SRT = 11;
 
     private final int TAG_CONTROLLER = 0;
     private final int TAG_FAST_BACK_BTN = 1;
@@ -221,6 +222,12 @@ public class VideoPlayerActivity extends BaseActivity implements OnClickListener
                         getActivity().setDownloadBtn(VideoPlayerDataHelper.getInstance());
                     }
                     break;
+//                case PARSE_SRT:
+                    //SrtParser.showSRT(videoView,tvSrt) ;
+                    //每隔500ms执行一次showSRT()，根据时间匹配显示哪句字幕
+//                    mHandler.sendEmptyMessageDelayed(0, 500);
+//                    break;
+
             }
             super.handleMessage(msg1);
         }
