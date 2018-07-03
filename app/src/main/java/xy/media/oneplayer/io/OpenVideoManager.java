@@ -16,6 +16,7 @@ import java.util.List;
 import xy.media.oneplayer.data.greendao.BaseFile;
 import xy.media.oneplayer.gl.Const;
 import xy.media.oneplayer.util.FileUtil;
+import xy.media.oneplayer.videoplayer.SimplePlayer;
 import xy.media.oneplayer.videoplayer.VideoPlayerActivity;
 
 import static xy.media.oneplayer.io.VideoPlayedModel.TYPE_OF_PLAYED_VIDEO_LOCAL;
@@ -88,15 +89,17 @@ public class OpenVideoManager {
                                   int openType,
                                   boolean isMineShare) {
 
-        Intent intent1 = new Intent();
-        intent1.setClass(activity, VideoPlayerActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("video_list", videoList);
-        bundle.putInt("video_pos", videoPosition);
-        bundle.putInt("open_type", openType);
-        bundle.putBoolean("is_mine_share", isMineShare);
-        intent1.putExtras(bundle);
-        activity.startActivityForResult(intent1, Const.REQUEST_CODE.VIDEO_BROWSE);
+//        Intent intent1 = new Intent();
+//        intent1.setClass(activity, VideoPlayerActivity.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable("video_list", videoList);
+//        bundle.putInt("video_pos", videoPosition);
+//        bundle.putInt("open_type", openType);
+//        bundle.putBoolean("is_mine_share", isMineShare);
+//        intent1.putExtras(bundle);
+//        activity.startActivityForResult(intent1, Const.REQUEST_CODE.VIDEO_BROWSE);
+
+        SimplePlayer.start(activity, videoList.get(videoPosition).getFilePath());
     }
 
 }
